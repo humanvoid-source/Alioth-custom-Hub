@@ -92,9 +92,9 @@
             </button>
 
             <article class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
-                <!-- Large Rectangular Logo -->
-                <div class="w-full h-48 md:h-72 bg-slate-950 rounded-xl overflow-hidden mb-6 border border-slate-800 flex items-center justify-center">
-                    <img id="detail-logo" src="" alt="Logo" class="w-full h-full object-cover">
+                <!-- Large Rectangular Logo Container (Fixed Fit) -->
+                <div class="w-full bg-slate-950 rounded-xl overflow-hidden mb-6 border border-slate-800 flex items-center justify-center p-2 sm:p-4 min-h-[180px]">
+                    <img id="detail-logo" src="" alt="Logo" class="w-full max-h-[420px] object-contain rounded-lg">
                 </div>
 
                 <!-- Title & Badges -->
@@ -159,24 +159,6 @@
 
     <!-- ================= CONFIGURATION & DATA BLOCK ================= -->
     <script>
-        /**
-         * БЛОК РЕДАКТИРОВАНИЯ ДАННЫХ
-         * 
-         * Параметры каждой записи:
-         * - id: Уникальный текстовый идентификатор (без пробелов)
-         * - title: Название прошивки / ядра
-         * - type: Категория ('aosp', 'miui-hyperos', 'ports', 'kernels')
-         * - isOfficial: true (Зеленый тег Official) или false (Красный тег Unofficial)
-         * - androidVersion: Версия Android (например: "14", "13.0") или "" если не требуется
-         * - logo: Путь к картинке логотипа
-         * - author: Автор
-         * - date: Дата публикации
-         * 
-         * Ссылки на скачивание (выберите удобный вариант):
-         * Вариант 1 (Две версии): downloadGapps: "ссылка", downloadVanilla: "ссылка"
-         * Вариант 2 (Только одна версия): downloadGapps: "ссылка", downloadVanilla: ""
-         * Вариант 3 (Обычная ссылка без указания gapps/vanilla, например для ядра): downloadUrl: "ссылка"
-         */
         const RELEASES_DATA = [
             {
                 id: "los",
@@ -187,83 +169,25 @@
                 logo: "assets/logos/los.jpg",
                 author: "@SahilSonar @althafvly @SebaUbuntu",
                 date: "29.07.2026",
-                
-                // Две кнопки скачивания (GAPPS и Vanilla):
                 downloadGapps: "",
                 downloadVanilla: "https://download.lineageos.org/devices/alioth/builds",
                 downloadUrl: "",
-                
                 postUrl: "https://t.me/pocoF3GlobalUpdates/2890",
                 groupUrl: "https://t.me/pocoF3GlobalUpdates",
                 screenshotsUrl: "https://www.lineageos.org/",
                 description: "Father",
                 changelog: `
-    <ul class="list-disc list-inside space-y-1">
-        <li><a href="https://download.lineageos.org/devices/alioth/changes" target="_blank">Official LineageOS Changelog</a></li>
-    </ul>
-`
-            },
-            {
-                id: "hyperos-port-14",
-                title: "Xiaomi HyperOS China Port",
-                type: "miui-hyperos",
-                isOfficial: false,
-                androidVersion: "14",
-                logo: "assets/logos/hyperos-port.png",
-                author: "PortMaster",
-                date: "2024-04-12",
-                
-                // Только одна ссылка (GAPPS по умолчанию встроен):
-                downloadGapps: "https://example.com/download-hyperos-gapps",
-                downloadVanilla: "", 
-                downloadUrl: "",
-
-                postUrl: "https://t.me/example_channel/101",
-                groupUrl: "https://t.me/example_group",
-                screenshotsUrl: "https://imgur.com/gallery/example2",
-                description: "Smooth HyperOS Port from Xiaomi 13 Pro ported directly to POCO F3. Includes Leica Camera and enhanced animation engines.",
-                changelog: `
                     <ul class="list-disc list-inside space-y-1">
-                        <li>Ported from OS1.0.8.0.UMCNXM.</li>
-                        <li>Leica Camera v5.0 included out of the box.</li>
-                        <li>Fixed Bluetooth audio battery drain.</li>
-                    </ul>
-                `
-            },
-            {
-                id: "no-name-kernel-v2",
-                title: "NoName Kernel v2.4",
-                type: "kernels",
-                isOfficial: true,
-                androidVersion: "13 / 14",
-                logo: "assets/logos/no-name-kernel.png",
-                author: "KernelDev",
-                date: "2024-06-01",
-                
-                // Обычная ссылка для ядер (без разделения на GAPPS/Vanilla):
-                downloadGapps: "",
-                downloadVanilla: "",
-                downloadUrl: "https://example.com/download-kernel-zip",
-
-                postUrl: "https://t.me/example_channel/102",
-                groupUrl: "https://t.me/example_group",
-                screenshotsUrl: "https://imgur.com/gallery/example3",
-                description: "Lightweight and power-efficient kernel built for battery endurance without sacrificing gaming performance.",
-                changelog: `
-                    <ul class="list-disc list-inside space-y-1">
-                        <li>Upstreamed Linux Kernel base version to 4.19.300.</li>
-                        <li>Compiled with Latest Clang 18 toolchain.</li>
-                        <li>Added KernelSU v0.9 support.</li>
+                        <li><a href="https://download.lineageos.org/devices/alioth/changes" target="_blank">LineageOS Official Changelog</a></li>
                     </ul>
                 `
             }
         ];
 
-        // ================= SYSTEM LOGIC (Do not edit below) =================
+        // ================= SYSTEM LOGIC =================
         let currentCategory = 'all';
         let searchQuery = '';
 
-        // Helper to generate HTML for Badges
         function getBadgesHtml(item) {
             let categoryText = item.type.toUpperCase();
             if(item.type === 'miui-hyperos') categoryText = 'MIUI / HyperOS';
@@ -307,8 +231,8 @@
 
                 card.innerHTML = `
                     <div>
-                        <div class="h-36 w-full bg-slate-950 rounded-xl overflow-hidden mb-4 border border-slate-800/80">
-                            <img src="${item.logo}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/600x300/0f172a/64748b?text=POCO+F3'">
+                        <div class="h-40 w-full bg-slate-950 rounded-xl overflow-hidden mb-4 border border-slate-800/80 flex items-center justify-center p-2">
+                            <img src="${item.logo}" alt="${item.title}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/600x300/0f172a/64748b?text=POCO+F3'">
                         </div>
                         <div class="flex flex-wrap gap-1.5 mb-2">
                             ${getBadgesHtml(item)}
@@ -359,13 +283,10 @@
             document.getElementById('detail-author').innerText = item.author;
             document.getElementById('detail-date').innerText = item.date;
 
-            // Render Download Buttons dynamically based on config
             const actionContainer = document.getElementById('detail-action-buttons');
             actionContainer.innerHTML = '';
 
-            // Handle Download Options
             if (item.downloadGapps && item.downloadVanilla) {
-                // Both GAPPS and Vanilla available
                 actionContainer.innerHTML += `
                     <a href="${item.downloadGapps}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
                         <i class="fa-solid fa-download"></i> GAPPS
@@ -375,21 +296,18 @@
                     </a>
                 `;
             } else if (item.downloadGapps) {
-                // Only GAPPS available
                 actionContainer.innerHTML += `
                     <a href="${item.downloadGapps}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
                         <i class="fa-solid fa-download"></i> Download (GAPPS)
                     </a>
                 `;
             } else if (item.downloadVanilla) {
-                // Only Vanilla available
                 actionContainer.innerHTML += `
                     <a href="${item.downloadVanilla}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
                         <i class="fa-solid fa-download"></i> Download (Vanilla)
                     </a>
                 `;
             } else if (item.downloadUrl) {
-                // Single standard download link (e.g., Kernel)
                 actionContainer.innerHTML += `
                     <a href="${item.downloadUrl}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
                         <i class="fa-solid fa-download"></i> Download
@@ -397,7 +315,6 @@
                 `;
             }
 
-            // Post, Group, Screenshots buttons
             if (item.postUrl) {
                 actionContainer.innerHTML += `
                     <a href="${item.postUrl}" target="_blank" class="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-sky-600/20">
@@ -420,7 +337,6 @@
                 `;
             }
 
-            // HTML Content
             document.getElementById('detail-description').innerHTML = item.description;
             document.getElementById('detail-changelog').innerHTML = item.changelog;
 
@@ -445,7 +361,6 @@
             showMainView();
         }
 
-        // Initialize App
         window.addEventListener('hashchange', handleRoute);
         window.addEventListener('DOMContentLoaded', () => {
             renderGrid();
