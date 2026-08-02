@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POCO F3 (Alioth) — ROMs & Kernels Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Стилизация ссылок внутри описания и ченджлога */
+        .content-body a {
+            color: #6366f1;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+        .content-body a:hover {
+            color: #818cf8;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <a href="#" onclick="showMainView(); return false;" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                    F3
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight group-hover:text-indigo-400 transition-colors">POCO F3 Hub</h1>
+                    <p class="text-xs text-slate-400">Alioth / Aliothin Archive</p>
+                </div>
+            </a>
+            <a href="https://t.me" target="_blank" class="text-slate-400 hover:text-white transition-colors text-sm flex items-center gap-2">
+                <i class="fa-brands fa-telegram text-lg"></i> <span class="hidden sm:inline">Community</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-8">
+
+        <!-- ================= MAIN VIEW (Catalog) ================= -->
+        <div id="main-view">
+            <!-- Hero Section -->
+            <div class="mb-8 text-center sm:text-left">
+                <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl text-white mb-2">
+                    ROMs & Kernels Directory
+                </h2>
+                <p class="text-slate-400 text-sm sm:text-base max-w-2xl">
+                    Explore custom ROMs, official ports, and performance kernels for POCO F3.
+                </p>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-between items-center">
+                <!-- Categories -->
+                <div class="flex flex-wrap gap-2 w-full sm:w-auto" id="category-filters">
+                    <button onclick="filterCategory('all')" class="cat-btn active bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-all hover:bg-indigo-500 shadow-md">All</button>
+                    <button onclick="filterCategory('aosp')" class="cat-btn bg-slate-900 text-slate-400 hover:text-white border border-slate-800 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:bg-slate-800">AOSP</button>
+                    <button onclick="filterCategory('miui-hyperos')" class="cat-btn bg-slate-900 text-slate-400 hover:text-white border border-slate-800 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:bg-slate-800">MIUI / HyperOS</button>
+                    <button onclick="filterCategory('ports')" class="cat-btn bg-slate-900 text-slate-400 hover:text-white border border-slate-800 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:bg-slate-800">Ports</button>
+                    <button onclick="filterCategory('kernels')" class="cat-btn bg-slate-900 text-slate-400 hover:text-white border border-slate-800 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:bg-slate-800">Kernels</button>
+                </div>
+
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+                    <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+            </div>
+
+            <!-- Release Cards Grid -->
+            <div id="releases-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic cards will be rendered here via JS -->
+            </div>
+            
+            <div id="no-results" class="hidden text-center py-16 text-slate-500">
+                <i class="fa-solid fa-ghost text-4xl mb-3"></i>
+                <p>No releases found matching your filter.</p>
+            </div>
+        </div>
+
+        <!-- ================= DETAIL VIEW (ROM Page) ================= -->
+        <div id="detail-view" class="hidden">
+            <!-- Back Button -->
+            <button onclick="showMainView()" class="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-6 transition-colors text-sm font-medium">
+                <i class="fa-solid fa-arrow-left"></i> Back to Releases
+            </button>
+
+            <article class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+                <!-- Large Rectangular Logo -->
+                <div class="w-full h-48 md:h-72 bg-slate-950 rounded-xl overflow-hidden mb-6 border border-slate-800 flex items-center justify-center">
+                    <img id="detail-logo" src="" alt="Logo" class="w-full h-full object-cover">
+                </div>
+
+                <!-- Title & Badge -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                    <div>
+                        <span id="detail-type-badge" class="uppercase text-[10px] font-bold tracking-wider px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2 inline-block">Category</span>
+                        <h2 id="detail-title" class="text-2xl md:text-3xl font-bold text-white">ROM Title</h2>
+                    </div>
+                </div>
+
+                <!-- 4 Action Buttons (Left to Right) -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                    <a id="btn-download" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
+                        <i class="fa-solid fa-download"></i> Download
+                    </a>
+                    <a id="btn-post" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-sky-600/20">
+                        <i class="fa-brands fa-telegram"></i> Post
+                    </a>
+                    <a id="btn-group" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 py-3 px-4 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-users"></i> Group
+                    </a>
+                    <a id="btn-screenshots" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 py-3 px-4 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-images"></i> Screenshots
+                    </a>
+                </div>
+
+                <!-- Meta Info (Author & Date) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-950/50 border border-slate-800/80 rounded-xl p-4 mb-8 text-sm">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-user-ninja text-slate-500 text-lg"></i>
+                        <div>
+                            <span class="block text-xs text-slate-500 uppercase tracking-wider">Author</span>
+                            <span id="detail-author" class="font-medium text-slate-200">Developer Name</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-calendar-day text-slate-500 text-lg"></i>
+                        <div>
+                            <span class="block text-xs text-slate-500 uppercase tracking-wider">Release Date</span>
+                            <span id="detail-date" class="font-medium text-slate-200">2024-00-00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="mb-8">
+                    <h3 class="text-lg font-semibold text-white mb-3 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-align-left text-indigo-400"></i> Description
+                    </h3>
+                    <div id="detail-description" class="content-body text-slate-300 text-sm leading-relaxed space-y-2">
+                        <!-- Description HTML content -->
+                    </div>
+                </div>
+
+                <!-- Changelog -->
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-3 border-b border-slate-800 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-indigo-400"></i> Changelog
+                    </h3>
+                    <div id="detail-changelog" class="content-body text-slate-300 text-sm leading-relaxed space-y-2">
+                        <!-- Changelog HTML content -->
+                    </div>
+                </div>
+            </article>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        <p>POCO F3 (Alioth) Custom Archive &bull; Hosted on GitHub Pages</p>
+    </footer>
+
+    <!-- ================= CONFIGURATION & DATA BLOCK ================= -->
+    <script>
+        /**
+         * БЛОК РЕДАКТИРОВАНИЯ ДАННЫХ
+         * Чтобы добавить прошивку или ядро, просто добавьте новый объект в массив RELEASES_DATA ниже.
+         * Типы (type): 'aosp', 'miui-hyperos', 'ports', 'kernels'
+         */
+        const RELEASES_DATA = [
+            {
+                id: "evolution-x-alioth",
+                title: "Evolution X 8.5",
+                type: "aosp",
+                logo: "assets/logos/evo-x.png",
+                author: "Joey Huami",
+                date: "2024-05-20",
+                downloadUrl: "https://example.com/download-evo",
+                postUrl: "https://t.me/example_channel/100",
+                groupUrl: "https://t.me/example_group",
+                screenshotsUrl: "https://imgur.com/gallery/example",
+                description: "Evolution X is an AOSP-based ROM designed to bring a Pixel-like feel to your POCO F3 with tons of customization features. Visit the <a href='https://evolution-x.org' target='_blank'>official website</a> for documentation.",
+                changelog: `
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>May 2024 Security Patch integrated.</li>
+                        <li>Fixed thermal throttling issues during heavy gaming.</li>
+                        <li>Added custom lockscreen clocks.</li>
+                        <li>Full changelog available on <a href="https://github.com" target="_blank">GitHub repository</a>.</li>
+                    </ul>
+                `
+            },
+            {
+                id: "hyperos-port-14",
+                title: "Xiaomi HyperOS China Port",
+                type: "miui-hyperos",
+                logo: "assets/logos/hyperos-port.png",
+                author: "PortMaster",
+                date: "2024-04-12",
+                downloadUrl: "https://example.com/download-hyperos",
+                postUrl: "https://t.me/example_channel/101",
+                groupUrl: "https://t.me/example_group",
+                screenshotsUrl: "https://imgur.com/gallery/example2",
+                description: "Smooth HyperOS Port from Xiaomi 13 Pro ported directly to POCO F3. Includes Leica Camera and enhanced animation engines.",
+                changelog: `
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Ported from OS1.0.8.0.UMCNXM.</li>
+                        <li>Leica Camera v5.0 included out of the box.</li>
+                        <li>Fixed Bluetooth audio battery drain.</li>
+                    </ul>
+                `
+            },
+            {
+                id: "no-name-kernel-v2",
+                title: "NoName Kernel v2.4",
+                type: "kernels",
+                logo: "assets/logos/no-name-kernel.png",
+                author: "KernelDev",
+                date: "2024-06-01",
+                downloadUrl: "https://example.com/download-kernel",
+                postUrl: "https://t.me/example_channel/102",
+                groupUrl: "https://t.me/example_group",
+                screenshotsUrl: "https://imgur.com/gallery/example3",
+                description: "Lightweight and power-efficient kernel built for battery endurance without sacrificing gaming performance.",
+                changelog: `
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Upstreamed Linux Kernel base version to 4.19.300.</li>
+                        <li>Compiled with Latest Clang 18 toolchain.</li>
+                        <li>Added KernelSU v0.9 support.</li>
+                    </ul>
+                `
+            },
+            {
+                id: "oxygenos-14-port",
+                title: "OxygenOS 14 Port",
+                type: "ports",
+                logo: "assets/logos/oos-port.png",
+                author: "PortTeam",
+                date: "2024-03-15",
+                downloadUrl: "https://example.com/download-oos",
+                postUrl: "https://t.me/example_channel/103",
+                groupUrl: "https://t.me/example_group",
+                screenshotsUrl: "https://imgur.com/gallery/example4",
+                description: "OnePlus OxygenOS 14 ported for POCO F3. Ultra smooth animations and fast shelf widgets.",
+                changelog: `
+                    <ul class="list-disc list-inside space-y-1">
+                        <li>Initial stable release.</li>
+                        <li>Alert slider simulated via quick settings tile.</li>
+                    </ul>
+                `
+            }
+        ];
+
+        // ================= SYSTEM LOGIC (Do not edit below) =================
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        function renderGrid() {
+            const grid = document.getElementById('releases-grid');
+            const noResults = document.getElementById('no-results');
+            grid.innerHTML = '';
+
+            const filtered = RELEASES_DATA.filter(item => {
+                const matchesCat = currentCategory === 'all' || item.type === currentCategory;
+                const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      item.author.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all rounded-2xl p-5 cursor-pointer flex flex-col justify-between group";
+                card.onclick = () => openDetail(item.id);
+
+                let badgeText = item.type.toUpperCase();
+                if(item.type === 'miui-hyperos') badgeText = 'MIUI / HyperOS';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="h-36 w-full bg-slate-950 rounded-xl overflow-hidden mb-4 border border-slate-800/80">
+                            <img src="${item.logo}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/600x300/0f172a/64748b?text=POCO+F3'">
+                        </div>
+                        <span class="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase">${badgeText}</span>
+                        <h3 class="text-xl font-bold text-white mt-2 group-hover:text-indigo-400 transition-colors">${item.title}</h3>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">${item.description.replace(/<[^>]*>?/gm, '')}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500">
+                        <span><i class="fa-solid fa-user text-slate-600 mr-1"></i> ${item.author}</span>
+                        <span><i class="fa-solid fa-clock text-slate-600 mr-1"></i> ${item.date}</span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white');
+                btn.classList.add('bg-slate-900', 'text-slate-400', 'border', 'border-slate-800');
+            });
+            event.target.classList.remove('bg-slate-900', 'text-slate-400', 'border', 'border-slate-800');
+            event.target.classList.add('bg-indigo-600', 'text-white');
+            renderGrid();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value;
+            renderGrid();
+        }
+
+        function openDetail(id) {
+            window.location.hash = id;
+        }
+
+        function showDetailView(item) {
+            document.getElementById('main-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.remove('hidden');
+
+            document.getElementById('detail-title').innerText = item.title;
+            
+            let badgeText = item.type.toUpperCase();
+            if(item.type === 'miui-hyperos') badgeText = 'MIUI / HyperOS';
+            document.getElementById('detail-type-badge').innerText = badgeText;
+            
+            const logoImg = document.getElementById('detail-logo');
+            logoImg.src = item.logo;
+            logoImg.onerror = () => { logoImg.src = 'https://via.placeholder.com/800x400/0f172a/64748b?text=POCO+F3+Release'; };
+
+            document.getElementById('detail-author').innerText = item.author;
+            document.getElementById('detail-date').innerText = item.date;
+
+            // Buttons URLs
+            document.getElementById('btn-download').href = item.downloadUrl || '#';
+            document.getElementById('btn-post').href = item.postUrl || '#';
+            document.getElementById('btn-group').href = item.groupUrl || '#';
+            document.getElementById('btn-screenshots').href = item.screenshotsUrl || '#';
+
+            // HTML content with hyperlink support
+            document.getElementById('detail-description').innerHTML = item.description;
+            document.getElementById('detail-changelog').innerHTML = item.changelog;
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showMainView() {
+            window.location.hash = '';
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('main-view').classList.remove('hidden');
+        }
+
+        function handleRoute() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash) {
+                const item = RELEASES_DATA.find(r => r.id === hash);
+                if (item) {
+                    showDetailView(item);
+                    return;
+                }
+            }
+            showMainView();
+        }
+
+        // Initialize App
+        window.addEventListener('hashchange', handleRoute);
+        window.addEventListener('DOMContentLoaded', () => {
+            renderGrid();
+            handleRoute();
+        });
+    </script>
+</body>
+</html>
