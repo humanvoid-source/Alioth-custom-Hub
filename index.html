@@ -9,14 +9,15 @@
     <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Стилизация ссылок внутри описания и ченджлога */
+        /* Стилизация гиперссылок в контенте */
         .content-body a {
-            color: #6366f1;
+            color: #818cf8;
             text-decoration: underline;
+            word-break: break-all;
             transition: color 0.2s;
         }
         .content-body a:hover {
-            color: #818cf8;
+            color: #a5b4fc;
         }
     </style>
 </head>
@@ -75,7 +76,7 @@
 
             <!-- Release Cards Grid -->
             <div id="releases-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamic cards will be rendered here via JS -->
+                <!-- Dynamic cards rendered via JS -->
             </div>
             
             <div id="no-results" class="hidden text-center py-16 text-slate-500">
@@ -92,7 +93,7 @@
             </button>
 
             <article class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
-                <!-- Large Rectangular Logo Container (Fixed Fit) -->
+                <!-- Logo Container (Fixed Fit) -->
                 <div class="w-full bg-slate-950 rounded-xl overflow-hidden mb-6 border border-slate-800 flex items-center justify-center p-2 sm:p-4 min-h-[180px]">
                     <img id="detail-logo" src="" alt="Logo" class="w-full max-h-[420px] object-contain rounded-lg">
                 </div>
@@ -107,7 +108,7 @@
 
                 <!-- Action Buttons Row (Left to Right) -->
                 <div class="flex flex-wrap gap-3 mb-8" id="detail-action-buttons">
-                    <!-- Download, Post, Group, Screenshots buttons rendered dynamically -->
+                    <!-- Dynamic Buttons -->
                 </div>
 
                 <!-- Meta Info (Author & Date) -->
@@ -128,24 +129,20 @@
                     </div>
                 </div>
 
-                <!-- Description -->
+                <!-- Description (Auto Line Breaks & Auto Links) -->
                 <div class="mb-8">
                     <h3 class="text-lg font-semibold text-white mb-3 border-b border-slate-800 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-align-left text-indigo-400"></i> Description
                     </h3>
-                    <div id="detail-description" class="content-body text-slate-300 text-sm leading-relaxed space-y-2">
-                        <!-- Description HTML content -->
-                    </div>
+                    <div id="detail-description" class="content-body text-slate-300 text-sm leading-relaxed whitespace-pre-line"></div>
                 </div>
 
-                <!-- Changelog -->
+                <!-- Changelog (Auto Line Breaks & Auto Links) -->
                 <div>
                     <h3 class="text-lg font-semibold text-white mb-3 border-b border-slate-800 pb-2 flex items-center gap-2">
                         <i class="fa-solid fa-list-check text-indigo-400"></i> Changelog
                     </h3>
-                    <div id="detail-changelog" class="content-body text-slate-300 text-sm leading-relaxed space-y-2">
-                        <!-- Changelog HTML content -->
-                    </div>
+                    <div id="detail-changelog" class="content-body text-slate-300 text-sm leading-relaxed whitespace-pre-line"></div>
                 </div>
             </article>
         </div>
@@ -160,7 +157,7 @@
     <!-- ================= CONFIGURATION & DATA BLOCK ================= -->
     <script>
         const RELEASES_DATA = [
-            {
+             {
                 id: "los",
                 title: "LineageOS 23.2",
                 type: "aosp",
@@ -208,12 +205,23 @@ Notes :
 • Import valid keybox to pass integrity 
 • Leica and dolby included
 • Recommended firmware https://t.me/PocoF3GlobalOfficial/1604727`
-         },
+         }
         ];
-
+        
         // ================= SYSTEM LOGIC =================
         let currentCategory = 'all';
         let searchQuery = '';
+
+        // Функция автоматического превращения ссылок (http/https) в кликабельные теги <a>
+        function autoLink(text) {
+            if (!text) return '';
+            const urlRegex = /(https?:\/\/[^\s<]+)/g;
+            return text.replace(urlRegex, function(url) {
+                let cleanUrl = url.replace(/[.,;)]+$/, '');
+                let trailing = url.substring(cleanUrl.length);
+                return `<a href="${cleanUrl}" target="_blank" rel="noopener noreferrer">${cleanUrl}</a>${trailing}`;
+            });
+        }
 
         function getBadgesHtml(item) {
             let categoryText = item.type.toUpperCase();
@@ -256,6 +264,8 @@ Notes :
                 card.className = "bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all rounded-2xl p-5 cursor-pointer flex flex-col justify-between group";
                 card.onclick = () => openDetail(item.id);
 
+                const plainDesc = item.description.replace(/<[^>]*>?/gm, '');
+
                 card.innerHTML = `
                     <div>
                         <div class="h-40 w-full bg-slate-950 rounded-xl overflow-hidden mb-4 border border-slate-800/80 flex items-center justify-center p-2">
@@ -265,7 +275,7 @@ Notes :
                             ${getBadgesHtml(item)}
                         </div>
                         <h3 class="text-xl font-bold text-white mt-1 group-hover:text-indigo-400 transition-colors">${item.title}</h3>
-                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">${item.description.replace(/<[^>]*>?/gm, '')}</p>
+                        <p class="text-xs text-slate-400 mt-1 line-clamp-2">${plainDesc}</p>
                     </div>
                     <div class="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500">
                         <span><i class="fa-solid fa-user text-slate-600 mr-1"></i> ${item.author}</span>
@@ -364,8 +374,9 @@ Notes :
                 `;
             }
 
-            document.getElementById('detail-description').innerHTML = item.description;
-            document.getElementById('detail-changelog').innerHTML = item.changelog;
+            // Авто-преобразование переносов строк и ссылок
+            document.getElementById('detail-description').innerHTML = autoLink(item.description);
+            document.getElementById('detail-changelog').innerHTML = autoLink(item.changelog);
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
