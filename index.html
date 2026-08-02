@@ -97,28 +97,17 @@
                     <img id="detail-logo" src="" alt="Logo" class="w-full h-full object-cover">
                 </div>
 
-                <!-- Title & Badge -->
-                <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-                    <div>
-                        <span id="detail-type-badge" class="uppercase text-[10px] font-bold tracking-wider px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-2 inline-block">Category</span>
-                        <h2 id="detail-title" class="text-2xl md:text-3xl font-bold text-white">ROM Title</h2>
+                <!-- Title & Badges -->
+                <div class="mb-6">
+                    <div id="detail-badges" class="flex flex-wrap items-center gap-2 mb-3">
+                        <!-- Badges rendered dynamically -->
                     </div>
+                    <h2 id="detail-title" class="text-2xl md:text-3xl font-bold text-white">ROM Title</h2>
                 </div>
 
-                <!-- 4 Action Buttons (Left to Right) -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-                    <a id="btn-download" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
-                        <i class="fa-solid fa-download"></i> Download
-                    </a>
-                    <a id="btn-post" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-sky-600/20">
-                        <i class="fa-brands fa-telegram"></i> Post
-                    </a>
-                    <a id="btn-group" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 py-3 px-4 rounded-xl font-medium text-sm transition-all">
-                        <i class="fa-solid fa-users"></i> Group
-                    </a>
-                    <a id="btn-screenshots" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 py-3 px-4 rounded-xl font-medium text-sm transition-all">
-                        <i class="fa-solid fa-images"></i> Screenshots
-                    </a>
+                <!-- Action Buttons Row (Left to Right) -->
+                <div class="flex flex-wrap gap-3 mb-8" id="detail-action-buttons">
+                    <!-- Download, Post, Group, Screenshots buttons rendered dynamically -->
                 </div>
 
                 <!-- Meta Info (Author & Date) -->
@@ -172,39 +161,63 @@
     <script>
         /**
          * БЛОК РЕДАКТИРОВАНИЯ ДАННЫХ
-         * Чтобы добавить прошивку или ядро, просто добавьте новый объект в массив RELEASES_DATA ниже.
-         * Типы (type): 'aosp', 'miui-hyperos', 'ports', 'kernels'
+         * 
+         * Параметры каждой записи:
+         * - id: Уникальный текстовый идентификатор (без пробелов)
+         * - title: Название прошивки / ядра
+         * - type: Категория ('aosp', 'miui-hyperos', 'ports', 'kernels')
+         * - isOfficial: true (Зеленый тег Official) или false (Красный тег Unofficial)
+         * - androidVersion: Версия Android (например: "14", "13.0") или "" если не требуется
+         * - logo: Путь к картинке логотипа
+         * - author: Автор
+         * - date: Дата публикации
+         * 
+         * Ссылки на скачивание (выберите удобный вариант):
+         * Вариант 1 (Две версии): downloadGapps: "ссылка", downloadVanilla: "ссылка"
+         * Вариант 2 (Только одна версия): downloadGapps: "ссылка", downloadVanilla: ""
+         * Вариант 3 (Обычная ссылка без указания gapps/vanilla, например для ядра): downloadUrl: "ссылка"
          */
         const RELEASES_DATA = [
             {
-                id: "evolution-x-alioth",
-                title: "Evolution X 8.5",
+                id: "los",
+                title: "LineageOS 23.2",
                 type: "aosp",
-                logo: "assets/logos/evo-x.png",
-                author: "Joey Huami",
-                date: "2024-05-20",
-                downloadUrl: "https://example.com/download-evo",
-                postUrl: "https://t.me/example_channel/100",
-                groupUrl: "https://t.me/example_group",
-                screenshotsUrl: "https://imgur.com/gallery/example",
-                description: "Evolution X is an AOSP-based ROM designed to bring a Pixel-like feel to your POCO F3 with tons of customization features. Visit the <a href='https://evolution-x.org' target='_blank'>official website</a> for documentation.",
+                isOfficial: true,
+                androidVersion: "16 QPR2",
+                logo: "assets/logos/los.jpg",
+                author: "@SahilSonar @althafvly @SebaUbuntu",
+                date: "29.07.2026",
+                
+                // Две кнопки скачивания (GAPPS и Vanilla):
+                downloadGapps: "",
+                downloadVanilla: "https://download.lineageos.org/devices/alioth/builds",
+                downloadUrl: "",
+                
+                postUrl: "https://t.me/pocoF3GlobalUpdates/2890",
+                groupUrl: "https://t.me/pocoF3GlobalUpdates",
+                screenshotsUrl: "https://www.lineageos.org/",
+                description: "Father",
                 changelog: `
-                    <ul class="list-disc list-inside space-y-1">
-                        <li>May 2024 Security Patch integrated.</li>
-                        <li>Fixed thermal throttling issues during heavy gaming.</li>
-                        <li>Added custom lockscreen clocks.</li>
-                        <li>Full changelog available on <a href="https://github.com" target="_blank">GitHub repository</a>.</li>
-                    </ul>
-                `
+    <ul class="list-disc list-inside space-y-1">
+        <li><a href="https://download.lineageos.org/devices/alioth/changes" target="_blank">Official LineageOS Changelog</a></li>
+    </ul>
+`
             },
             {
                 id: "hyperos-port-14",
                 title: "Xiaomi HyperOS China Port",
                 type: "miui-hyperos",
+                isOfficial: false,
+                androidVersion: "14",
                 logo: "assets/logos/hyperos-port.png",
                 author: "PortMaster",
                 date: "2024-04-12",
-                downloadUrl: "https://example.com/download-hyperos",
+                
+                // Только одна ссылка (GAPPS по умолчанию встроен):
+                downloadGapps: "https://example.com/download-hyperos-gapps",
+                downloadVanilla: "", 
+                downloadUrl: "",
+
                 postUrl: "https://t.me/example_channel/101",
                 groupUrl: "https://t.me/example_group",
                 screenshotsUrl: "https://imgur.com/gallery/example2",
@@ -221,10 +234,17 @@
                 id: "no-name-kernel-v2",
                 title: "NoName Kernel v2.4",
                 type: "kernels",
+                isOfficial: true,
+                androidVersion: "13 / 14",
                 logo: "assets/logos/no-name-kernel.png",
                 author: "KernelDev",
                 date: "2024-06-01",
-                downloadUrl: "https://example.com/download-kernel",
+                
+                // Обычная ссылка для ядер (без разделения на GAPPS/Vanilla):
+                downloadGapps: "",
+                downloadVanilla: "",
+                downloadUrl: "https://example.com/download-kernel-zip",
+
                 postUrl: "https://t.me/example_channel/102",
                 groupUrl: "https://t.me/example_group",
                 screenshotsUrl: "https://imgur.com/gallery/example3",
@@ -236,31 +256,30 @@
                         <li>Added KernelSU v0.9 support.</li>
                     </ul>
                 `
-            },
-            {
-                id: "oxygenos-14-port",
-                title: "OxygenOS 14 Port",
-                type: "ports",
-                logo: "assets/logos/oos-port.png",
-                author: "PortTeam",
-                date: "2024-03-15",
-                downloadUrl: "https://example.com/download-oos",
-                postUrl: "https://t.me/example_channel/103",
-                groupUrl: "https://t.me/example_group",
-                screenshotsUrl: "https://imgur.com/gallery/example4",
-                description: "OnePlus OxygenOS 14 ported for POCO F3. Ultra smooth animations and fast shelf widgets.",
-                changelog: `
-                    <ul class="list-disc list-inside space-y-1">
-                        <li>Initial stable release.</li>
-                        <li>Alert slider simulated via quick settings tile.</li>
-                    </ul>
-                `
             }
         ];
 
         // ================= SYSTEM LOGIC (Do not edit below) =================
         let currentCategory = 'all';
         let searchQuery = '';
+
+        // Helper to generate HTML for Badges
+        function getBadgesHtml(item) {
+            let categoryText = item.type.toUpperCase();
+            if(item.type === 'miui-hyperos') categoryText = 'MIUI / HyperOS';
+
+            const catBadge = `<span class="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase">${categoryText}</span>`;
+            
+            const officialBadge = item.isOfficial 
+                ? `<span class="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase flex items-center gap-1"><i class="fa-solid fa-circle-check text-[9px]"></i> Official</span>`
+                : `<span class="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md bg-rose-500/10 text-rose-400 border border-rose-500/20 uppercase flex items-center gap-1"><i class="fa-solid fa-circle-xmark text-[9px]"></i> Unofficial</span>`;
+
+            const androidBadge = item.androidVersion 
+                ? `<span class="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md bg-slate-800 text-slate-300 border border-slate-700 uppercase flex items-center gap-1"><i class="fa-brands fa-android text-emerald-400"></i> Android ${item.androidVersion}</span>`
+                : '';
+
+            return `${catBadge} ${officialBadge} ${androidBadge}`;
+        }
 
         function renderGrid() {
             const grid = document.getElementById('releases-grid');
@@ -286,16 +305,15 @@
                 card.className = "bg-slate-900 border border-slate-800 hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all rounded-2xl p-5 cursor-pointer flex flex-col justify-between group";
                 card.onclick = () => openDetail(item.id);
 
-                let badgeText = item.type.toUpperCase();
-                if(item.type === 'miui-hyperos') badgeText = 'MIUI / HyperOS';
-
                 card.innerHTML = `
                     <div>
                         <div class="h-36 w-full bg-slate-950 rounded-xl overflow-hidden mb-4 border border-slate-800/80">
                             <img src="${item.logo}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://via.placeholder.com/600x300/0f172a/64748b?text=POCO+F3'">
                         </div>
-                        <span class="text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 uppercase">${badgeText}</span>
-                        <h3 class="text-xl font-bold text-white mt-2 group-hover:text-indigo-400 transition-colors">${item.title}</h3>
+                        <div class="flex flex-wrap gap-1.5 mb-2">
+                            ${getBadgesHtml(item)}
+                        </div>
+                        <h3 class="text-xl font-bold text-white mt-1 group-hover:text-indigo-400 transition-colors">${item.title}</h3>
                         <p class="text-xs text-slate-400 mt-1 line-clamp-2">${item.description.replace(/<[^>]*>?/gm, '')}</p>
                     </div>
                     <div class="mt-6 pt-4 border-t border-slate-800/60 flex items-center justify-between text-xs text-slate-500">
@@ -332,10 +350,7 @@
             document.getElementById('detail-view').classList.remove('hidden');
 
             document.getElementById('detail-title').innerText = item.title;
-            
-            let badgeText = item.type.toUpperCase();
-            if(item.type === 'miui-hyperos') badgeText = 'MIUI / HyperOS';
-            document.getElementById('detail-type-badge').innerText = badgeText;
+            document.getElementById('detail-badges').innerHTML = getBadgesHtml(item);
             
             const logoImg = document.getElementById('detail-logo');
             logoImg.src = item.logo;
@@ -344,13 +359,68 @@
             document.getElementById('detail-author').innerText = item.author;
             document.getElementById('detail-date').innerText = item.date;
 
-            // Buttons URLs
-            document.getElementById('btn-download').href = item.downloadUrl || '#';
-            document.getElementById('btn-post').href = item.postUrl || '#';
-            document.getElementById('btn-group').href = item.groupUrl || '#';
-            document.getElementById('btn-screenshots').href = item.screenshotsUrl || '#';
+            // Render Download Buttons dynamically based on config
+            const actionContainer = document.getElementById('detail-action-buttons');
+            actionContainer.innerHTML = '';
 
-            // HTML content with hyperlink support
+            // Handle Download Options
+            if (item.downloadGapps && item.downloadVanilla) {
+                // Both GAPPS and Vanilla available
+                actionContainer.innerHTML += `
+                    <a href="${item.downloadGapps}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
+                        <i class="fa-solid fa-download"></i> GAPPS
+                    </a>
+                    <a href="${item.downloadVanilla}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-700 hover:bg-indigo-600 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-700/20">
+                        <i class="fa-solid fa-download"></i> Vanilla
+                    </a>
+                `;
+            } else if (item.downloadGapps) {
+                // Only GAPPS available
+                actionContainer.innerHTML += `
+                    <a href="${item.downloadGapps}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
+                        <i class="fa-solid fa-download"></i> Download (GAPPS)
+                    </a>
+                `;
+            } else if (item.downloadVanilla) {
+                // Only Vanilla available
+                actionContainer.innerHTML += `
+                    <a href="${item.downloadVanilla}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
+                        <i class="fa-solid fa-download"></i> Download (Vanilla)
+                    </a>
+                `;
+            } else if (item.downloadUrl) {
+                // Single standard download link (e.g., Kernel)
+                actionContainer.innerHTML += `
+                    <a href="${item.downloadUrl}" target="_blank" class="flex-1 min-w-[140px] flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-indigo-600/20">
+                        <i class="fa-solid fa-download"></i> Download
+                    </a>
+                `;
+            }
+
+            // Post, Group, Screenshots buttons
+            if (item.postUrl) {
+                actionContainer.innerHTML += `
+                    <a href="${item.postUrl}" target="_blank" class="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-sky-600 hover:bg-sky-500 text-white py-3 px-4 rounded-xl font-medium text-sm transition-all shadow-lg shadow-sky-600/20">
+                        <i class="fa-brands fa-telegram"></i> Post
+                    </a>
+                `;
+            }
+            if (item.groupUrl) {
+                actionContainer.innerHTML += `
+                    <a href="${item.groupUrl}" target="_blank" class="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-sky-400 border border-slate-700 py-3 px-4 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-users"></i> Group
+                    </a>
+                `;
+            }
+            if (item.screenshotsUrl) {
+                actionContainer.innerHTML += `
+                    <a href="${item.screenshotsUrl}" target="_blank" class="flex-1 min-w-[120px] flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 py-3 px-4 rounded-xl font-medium text-sm transition-all">
+                        <i class="fa-solid fa-images"></i> Screenshots
+                    </a>
+                `;
+            }
+
+            // HTML Content
             document.getElementById('detail-description').innerHTML = item.description;
             document.getElementById('detail-changelog').innerHTML = item.changelog;
 
